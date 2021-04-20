@@ -1,4 +1,4 @@
-#Projet Algorithmique
+# Projet Algorithmique
 
 > Projet IN403 - UVSQ
 >
