@@ -14,7 +14,7 @@ Tout d'abord, il faut créer les fichiers nécessaires au projet : `Makefile`, `
 Explication
 
 ### *struct* noeud
-```
+```c
 struct Noeud
 {
 	int nom;//nom du noeud considéré
@@ -28,7 +28,7 @@ struct Noeud
 
 ### *NOEUD* creer graphe
 Explication 
-```
+```c
 
 NOEUD creerGraphe(int nbsommets){
   // Tableau de struct noeud définissant le graphe
@@ -39,7 +39,7 @@ NOEUD creerGraphe(int nbsommets){
   }
   ```
   Explication
-  ``` }
+  ```c }
   //Allocation de la mémoire du tableau de voisins et de pondération selon le type de noeud (typage arbitraire, initialisé ici)
   for(int i=0; i<nbsommets; i++){
     int x; 
@@ -52,7 +52,7 @@ NOEUD creerGraphe(int nbsommets){
    Explication
   
   
- ``` 
+ ```c
    // On vérifie si l'allocation mémoire s'est bien effectuée
     if(graphe[i].suivant==NULL){
       printf("Problème d'allocation mémoire lors de la 		 	 création du tableau de voisins");
@@ -60,7 +60,7 @@ NOEUD creerGraphe(int nbsommets){
     } 
    ```
    Explication
-  ``` 
+  ```c
    graphe[i].poids=malloc(sizeof(int)*x);
     if(graphe[i].poids==NULL){
       printf("Problème d'allocation mémoire lors de la création du tableau de pondération des arêtes");
