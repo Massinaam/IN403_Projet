@@ -20,66 +20,54 @@ Tout d'abord, il faut créer les fichiers nécessaires au projet : `Makefile`, `
 
 
 ## Création du graphe
-Explication
+La structure de données permettant de stocker le graphe est composée de 5 champs représentant un noeud du graphe. Un nom, un nombre de voisin, une liste châinée de ceux-ci, les poids reliant le sommet à ses voisins, mais aussi une table de routage. A partir de cette structure, on définit le graphe comme un ensemble de noeuds, i.e *struct* Noeud* NOEUD.
 
-### *struct* noeud
+### *struct* Noeud
 ```c
 struct Noeud
 {
-	int nom;//nom du noeud considéré
-	int nb_voisin; // nombre de voisins, représente aussi la position du nouveau noeud à insérer
-	struct Noeud* suivant;// pointe le voisin suivant dans la liste chaînée le cas échéant
-	int* poids;// ième poids de l'arrête entre le noeud et le ième voisin du noeud
-  int tableRoutage[2][100]; // table de routage du noeud
-};typedef struct Noeud* NOEUD;
+	int nom;			// nom du noeud considéré (représenté par un entier)
+	int nb_voisin; 			// nombre de voisins, représente aussi la position du nouveau noeud à insérer
+	struct Noeud* suivant;		// pointe le voisin suivant dans la liste chaînée, le cas échéant
+	int* poids;			// ième poids de l'arrête entre le noeud et le ième voisin du noeud
+ 	int tableRoutage[2][100]; 	// table de routage du noeud
+}; 
+typedef struct Noeud* NOEUD;		// matérialise le graphe (ensemble de struct Noeud)
 ```
 
 
 ### *NOEUD* creer graphe
-Explication 
+Cette fonction permet la création d'un graphe (I), ici de 100 noeuds, auxquels un "type" (tier1, tier2 ou tier3) est donné de façon à "ranger" les tier1 de l'indice 0 à 9, les tier2 de l'indice 10 à 29 et les tier 3 de 30 à 99. (II) On les nomment ensuite avec le postulat suivant : le chiffre des centaines indique le type du noeud et les suivants indiquent sa position dans le tableau de noeuds (le graphe).
 ```c
 
 NOEUD creerGraphe(int nbsommets){
-  // Tableau de struct noeud définissant le graphe
+  //----------(I)----------
   NOEUD graphe=malloc(nbsommets*sizeof(struct Noeud));
-  if(graphe==NULL){
-    printf("Problème d'allocation mémoire lors de la création du graphe");
-    exit(EXIT_FAILURE);
-  }
-  ```
-  Explication
-  ```c }
-  //Allocation de la mémoire du tableau de voisins et de pondération selon le type de noeud (typage arbitraire, initialisé ici)
+  // -> vérif malloc
+  
+  //----------(II)---------
   for(int i=0; i<nbsommets; i++){
-    int x; 
-    if(i<10) x=T1;
-    else if(i<30) x=T2;
-    else x=T3;
-    graphe[i].suivant=malloc(sizeof(struct Noeud)*x); 
-  ```
+    if(i<nbsommets/10) graphe[i].nom=nbsommets+i;
+	else if(i<((nbsommets-(nbsommets/10))/3)) graphe[i].nom=nbsommets*2+i;
+		else graphe[i].nom = nbsommets*3+i;
+    graphe[i].nb_voisin=0;
+  }
   
-   Explication
-  
-  
- ```c
-   // On vérifie si l'allocation mémoire s'est bien effectuée
-    if(graphe[i].suivant==NULL){
-      printf("Problème d'allocation mémoire lors de la 		 	 création du tableau de voisins");
-      exit(EXIT_FAILURE);
-    } 
-   ```
-   Explication
-  ```c
-   graphe[i].poids=malloc(sizeof(int)*x);
-    if(graphe[i].poids==NULL){
-      printf("Problème d'allocation mémoire lors de la création du tableau de pondération des arêtes");
-      exit(EXIT_FAILURE);
-    } 
+  //---------(III)---------				 
+  for(int i=0; i<nbsommets; i++){
+    int x; 				// nombre de voisins maximum selon le type de noeud
+    if(i<10) x=30;
+    	else if(i<30) x=100;
+    		else x=3;
+    graphe[i].suivant=malloc(sizeof(struct Noeud)*x);
+    // -> vérif malloc
+    graphe[i].poids=malloc(sizeof(int)*x);
+    // -> vérif malloc
   }    
   return graphe;
 }
 ```
-
+(III) Ci-dessus on alloue la mémoire maximale occupée par le tableau de voisins et de pondération pour chaque noeud du graphe et selon son type.
 
 
 ### *NOEUD* implementationGraphe
