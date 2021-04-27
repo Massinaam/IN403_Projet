@@ -2,7 +2,8 @@ CC = gcc
 CFLAGS = -c -Wall
 OBJS = main.o graphe.o
 
-.PHONY: run
+.PHONY: run clean zip install
+
 run: main
 	./main
 	
@@ -15,14 +16,14 @@ main.o: main.c *.h
 %.o: %.c %.h
 	$(CC) $(CFLAGS) $<
 
-.PHONY: clean
+
 clean: 
 	rm -f $(OBJS)
 	rm -f main
 	ls -l
 
 DOSSIER = BENAYED_DEMANGE_VILLA_AMMAD
-.PHONY: zip
+
 zip:
 	rm -rf $(DOSSIER)
 	rm -f $(DOSSIER).zip
