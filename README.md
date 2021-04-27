@@ -72,7 +72,7 @@ NOEUD creerGraphe(int nbsommets){
 Cette fonction connecte les noeuds tier1 entre eux avec 75% de chances que deux noeuds soient connectés entre eux. Brièvement, on balaye la partie de tableau de noeuds (graphe) correspondant aux tier1 et on ajoute des arrêtes entres eux (probabilité de 0.75), avec pondération p appropriée (4 < p < 11).
 
 ### *NOEUD* creationT2
-Cette fonction connecte les noeuds tier2 entre eux et aux noeuds tier1 de façon aléatoire. Un noeud de tier2 à un ou deux voisin(s) de tier1 et 2 ou 3 de tier2. Ici, on réalise les mêmes opérations que dans [`creationT1`](#*NOEUD* creationT1), en plus complexe en raison de la spécificité des noeuds de transit. Les arrêtes partant d'un tier2 sont pondérées entre 10 et 20.
+Cette fonction connecte les noeuds tier2 entre eux et aux noeuds tier1 de façon aléatoire. Un noeud de tier2 à un ou deux voisin(s) de tier1 et 2 ou 3 de tier2. Ici, on réalise les mêmes opérations que dans [`creationT1`](https://github.com/Massinaam/IN403_Projet/blob/master/README.md#noeud-creationt2), en plus complexe en raison de la spécificité des noeuds de transit. Les arrêtes partant d'un tier2 sont pondérées entre 10 et 20.
 ```c
 NOEUD creationT2(NOEUD graphe,int nbsommets){
 for(int i=0; i<nbsommets; i++){
