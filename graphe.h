@@ -4,7 +4,6 @@ struct Noeud
 {
 	int nom;//nom du noeud considéré
 	int nb_voisin; // nombre de voisins, représente aussi la position du nouveau noeud à insérer
-	struct Noeud* suivant;// pointe le voisin suivant dans la liste chaînée le cas échéant
 	int* poids;// ième poids de l'arrête entre le noeud et le ième voisin du noeud
   int tableRoutage[2][100]; // table de routage du noeud
 };typedef struct Noeud* NOEUD;
@@ -37,10 +36,22 @@ int verif_arete(struct Noeud n, int nom);
 
 NOEUD liste_destinataire(NOEUD graphe, int nbsommets);
 
-NOEUD calcul_distance(NOEUD graphe, int sommets, struct Noeud n);
+struct Noeud calcul_distance(NOEUD graphe, int sommets, struct Noeud n);
 
 NOEUD table_routage_1(NOEUD graphe, int nbsommets);
 
-NOEUD tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100]);
+struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100]);
 
 NOEUD tableRoutage(NOEUD graphe, int nbsommets);
+
+void retrouve_chemin(NOEUD graphe, int nbsommets);
+
+int saisie_noeud(int mode);
+
+NOEUD creationT1(NOEUD graphe, int nbsommets);
+
+NOEUD creationT2(NOEUD graphe, int nbsommets);
+
+NOEUD creationT3(NOEUD graphe, int nbsommets);
+
+void affiche_chemin(int emet,int transit[]);
