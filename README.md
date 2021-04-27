@@ -12,8 +12,7 @@ Nous souhaitons créer un réseau connexe et non orienté matérialisé par un g
 Pour répondre à cet interrogation avec un programme informatique, il convient de créer un graphe avec les propriétés susdites et réfléchir à une structure de données pour le stocker en mémoire. Ensuite, il faut établir une table de routage pour chaque noeud, il sera nécessaire de choisir un algorithme de plus court chemin parmi ceux que l'on connait pour y parvenir. Il suffit ensuite d'exploiter ces tables de routage pour établir le chemin optimal en terme de coût pour transiter un paquet d'informations d'un noeud x vers un noeud y.
 
 ### Choix du langage de programmation
-Nous avons chosi de programmer cette application en langage C, nous nous sentons plus à l'aise avec celui-ci d'une part, et d'autre part, c'est un langage réputé pour sa rapidité d'exécution, pas forcément négligeable lorsqu'il s'agit de réaliser beaucoup de calculs et de comparaison. Tous les codes sont mis en fichiers annexes.
- Tous les codes sont mis en fichiers annexes.
+Nous avons chosi de programmer cette application en langage C, nous nous sentons plus à l'aise avec celui-ci d'une part, et d'autre part, c'est un langage réputé pour sa rapidité d'exécution, pas forcément négligeable lorsqu'il s'agit de réaliser beaucoup de calculs et de comparaison. Tous les codes sont mis en fichiers annexes. A noter que les codes que vous verrez ici sont à titre illustratif, ils ne sont pas voués à être testés sur machine. Le groupe décline toute responsabilité en cas de réclamation sur le code à visée pédagogique.
 
 ## Canevas
 Tout d'abord, il faut créer les fichiers nécessaires au projet : `Makefile`, `graphe.h`, `graphe.c` et `main.c`
@@ -36,7 +35,7 @@ typedef struct Noeud* NOEUD;		// matérialise le graphe (ensemble de struct Noeu
 ```
 
 
-### *NOEUD* creer graphe
+### *NOEUD* creerGraphe
 Cette fonction permet la création d'un graphe (I), ici de 100 noeuds, auxquels un "type" (tier1, tier2 ou tier3) est donné de façon à "ranger" les tier1 de l'indice 0 à 9, les tier2 de l'indice 10 à 29 et les tier 3 de 30 à 99. (II) On les nomment ensuite avec le postulat suivant : le chiffre des centaines indique le type du noeud et les suivants indiquent sa position dans le tableau de noeuds (le graphe).
 ```c
 
@@ -69,32 +68,16 @@ NOEUD creerGraphe(int nbsommets){
 ```
 (III) Ci-dessus on alloue la mémoire maximale occupée par le tableau de voisins et de pondération pour chaque noeud du graphe et selon son type.
 
+### *NOEUD* creationT1
+Cette fonction connecte les noeuds tier1 entre eux avec 75% de chances que deux noeuds soient connectés entre eux. Brièvement, on balaye la partie de tableau de noeuds (graphe) correspondant aux tier1 et on ajoute des arrêtes entres eux (probabilité de 0.75), avec pondération p appropriée (4 < p < 11).
 
-### *NOEUD* implementationGraphe
-Explication
+### *NOEUD* creationT2
+Cette fonction connecte les noeuds tier2 entre eux et aux noeuds tier1 de façon aléatoire. Un noeud de tier2 à un ou deux voisin(s) de tier1 et 2 ou 3 de tier2. Ici, on réalise les mêmes opérations que dans *creationT1*, en plus complexe en raison de la spécificité des noeuds de transit. Les arrêtes partant d'un tier2 sont pondérées entre 10 et 20.
 ```c
-// Création des arêtes
-NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
-  srandom(getpid());
-  for(int i=0; i<nbsommets; i++){
-    if(i<nbsommets/10){
-	    for(int j=0; j<nbsommets/10; j++){
-		    if(i!=j){
-	        if(different(graphe[j],graphe[i].suivant, graphe[i].nb_voisin)){
-			      int alea=random()%4;
-			      if(alea<=2){
-				      graphe[i].poids[graphe[i].nb_voisin]=(random()%6)+5;
-				      graphe[j].poids[graphe[j].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
-				      graphe=ajout_arete(i, j, graphe);
-            }
-          }		
-		    }
-      }
-    }
-    else if(i<30 && i>9){ 
-    // Création des arêtes pour les tiers 2
-    // Arêtes entre les tiers 2 et les tiers 1
-      int nb_tiers1=(random()%2)+1;
+NOEUD creationT2(NOEUD graphe,int nbsommets){
+for(int i=0; i<nbsommets; i++){
+    if(i<30 && i>9){ 				// Arêtes entre les tiers 2 et les tiers 1
+      int nb_tiers1=(random()%2)+1;		
       for(int j=1; j<=nb_tiers1; j++){
         int tiers1;
         do {tiers1=random()%nbsommets/10;}
@@ -102,52 +85,37 @@ NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
         graphe[i].poids[graphe[i].nb_voisin]=(random()%11)+10; 
         graphe[tiers1].poids[graphe[tiers1].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
         graphe=ajout_arete(i, tiers1, graphe);
-      }
+        }
     int nb_tiers2=(random()%2)+2;
     nb_tiers2 = nb_tiers2-voisin_tiers2(graphe[i]);
     for(int j=1; j<=nb_tiers2; j++){
-      int infini = 0;
-	    int tiers2=(random()%20)+10;
-      while(voisin_tiers2(graphe[tiers2])>=3 || different(graphe[tiers2], graphe[i].suivant, graphe[i].nb_voisin)==0 || tiers2==i){
+        int infini = 0;
+	int tiers2=(random()%20)+10;
+      while( voisin_tiers2(graphe[tiers2]) >= 3 
+             || different(graphe[tiers2], graphe[i].suivant, graphe[i].nb_voisin) == 0 
+	     || tiers2 == i ){
         tiers2=(random()%20)+10;
         infini++; 
         if(infini>500){
           printf("Le graphe n'a pas réussi à se construire\n");
           exit(EXIT_FAILURE);
-        }
-      }
+          }
+      	}
       graphe[i].poids[graphe[i].nb_voisin]=(random()%11)+10;
       graphe[tiers2].poids[graphe[tiers2].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
       graphe=ajout_arete(i, tiers2,graphe);
-	  }
+	}
+     }
   }
-  else{
-    // création sommets de Tier3
-    for(int j=1; j<=2; j++){ 
-      int tiers2;
-      do { tiers2=(random()%(nbsommets/5))+10;}
-      while(different(graphe[tiers2], graphe[i].suivant, graphe[i].nb_voisin)==0);
-      graphe[i].poids[graphe[i].nb_voisin]=(random()%36)+15; 
-      graphe[tiers2].poids[graphe[tiers2].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
-      graphe=ajout_arete(i, tiers2, graphe); 
-    }
-    if(arete_tiers3(graphe, nbsommets)==0){   
-      if(voisin_tiers3(graphe[i])==0) {
-        int tiers3=0; 
-        do{tiers3=random()%70+30;}
-        while(different(graphe[tiers3], graphe[i].suivant, graphe[i].nb_voisin)==0 || tiers3==i || voisin_tiers3(graphe[tiers3])==1); 
-        graphe[i].poids[graphe[i].nb_voisin]=(random()%36)+15;
-        graphe[tiers3].poids[graphe[tiers3].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
-        graphe=ajout_arete(i,tiers3,graphe);
-      }
-    }
-  }
-  }
-graphe=table_routage_1(graphe,nbsommets);
   return graphe;
 }
-
 ```
+### *NOEUD* creationT3
+Cette fonction connecte les noeuds tier3 à deux noeuds tier2 et un autre noeud tier3 de façon aléatoire. Le code est similaire à ce qui à été vu précedemment, il serait redondant de s'attarder dessus. Le code est disponible en annexe au besoin.
+
+### *NOEUD* implementationGraphe
+Explication
+
 
 ### *NOEUD* different
 Explication
@@ -195,16 +163,20 @@ int voisin_tiers2(struct Noeud n){
 ```
 
 ### *int* voisin_tiers3
-### *void* libererGraphe
-### *void* affiche_noeuds
 ### *void* explorer
 ### *int* marquage
 ### *int* dans_min
 ### *int* min_poids
 ### *int* verif_arete
 ### *NOEUD* liste_destinataire
+### *void* retrouve_chemin
+
+## Recherche du plus court chemin & table de routage
 ### *NOEUD* calcul_distance
 ### *NOEUD* table_routage_1
 ### *NOEUD* tableRoutage2
 ### *NOEUD* tableRoutage
-### *void* retrouve_chemin
+
+## Divers
+### *void* libererGraphe
+### *void* affiche_noeuds
