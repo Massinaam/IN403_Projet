@@ -6,7 +6,7 @@
 - [Introduction](#introduction)
 - [Canevas](#canevas)
 - [Création du graphe](#création-du-graphe)
-- [Recherche du plus court chemin & table de routage](#recherche-du-plus-court-chemin-&-table-de-routage)
+- [Recherche du plus court chemin & table de routage](#recherche-du-plus-court-chemin--table-de-routage)
 - [Divers](#divers)
 
 ## Introduction
@@ -21,8 +21,7 @@ Pour répondre à cet interrogation avec un programme informatique, il convient 
 Nous avons chosi de programmer cette application en langage C, nous nous sentons plus à l'aise avec celui-ci d'une part, et d'autre part, c'est un langage réputé pour sa rapidité d'exécution, pas forcément négligeable lorsqu'il s'agit de réaliser beaucoup de calculs et de comparaison. Tous les codes sont mis en fichiers annexes. A noter que les codes que vous verrez ici sont à titre illustratif, ils ne sont pas voués à être testés sur machine. Le groupe décline toute responsabilité en cas de réclamation sur le code à visée pédagogique.
 
 ## Canevas
-Tout d'abord, il faut créer les fichiers nécessaires au projet : `Makefile`, `graphe.h`, `graphe.c` et `main.c`
-
+Tout d'abord, il faut créer les fichiers nécessaires au projet : [`Makefile`](https://github.com/Massinaam/IN403_Projet/blob/7d9193aa28291bca4e4d70857c245837eedb90e6/Makefile), [`graphe.h`](https://github.com/Massinaam/IN403_Projet/blob/7d9193aa28291bca4e4d70857c245837eedb90e6/graphe.h), [`graphe.c`](https://github.com/Massinaam/IN403_Projet/blob/7d9193aa28291bca4e4d70857c245837eedb90e6/graphe.c) et [`main.c`](https://github.com/Massinaam/IN403_Projet/blob/7d9193aa28291bca4e4d70857c245837eedb90e6/main.c)
 
 ## Création du graphe
 La structure de données permettant de stocker le graphe est composée de 5 champs représentant un noeud du graphe. Un nom, un nombre de voisin, une liste châinée de ceux-ci, les poids reliant le sommet à ses voisins, mais aussi une table de routage. A partir de cette structure, on définit le graphe comme un ensemble de noeuds, i.e *struct* Noeud* NOEUD.
