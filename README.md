@@ -3,11 +3,11 @@
 > Projet IN403 - UVSQ
 >
 # Sommaire
-### [Introduction](#introduction)
-### [Canevas](#canevas)
-### [Création du graphe](#création-du-graphe)
-### [Recherche du plus court chemin & table de routage](#recherche-du-plus-court-chemin-&-table-de-routage)
-### [Divers](#divers)
+- [Introduction](#introduction)
+- [Canevas](#canevas)
+- [Création du graphe](#création-du-graphe)
+- [Recherche du plus court chemin & table de routage](#recherche-du-plus-court-chemin-&-table-de-routage)
+- [Divers](#divers)
 
 ## Introduction
 
