@@ -5,7 +5,7 @@
 
 /* -----------------------------------------------
 > @Authors : Khadija Ben Ayed, Noé Demange, Romain Villa, Massina Ammad
-> version du 18/04/2021
+> version du 20/04/2021
 --------------------------------------------------*/
 
 //Taille max des tableaux de voisins d'un noeud (et in-extenso de pondération) pour chaque type de noeud
@@ -15,7 +15,7 @@
 
 // Création d'un graphe en fonction du nombre de sommets
 NOEUD creerGraphe(int nbsommets){
-  // ableau de struct noeud définissant le graphe
+  // Tableau de struct noeud définissant le graphe
   NOEUD graphe=malloc(nbsommets*sizeof(struct Noeud));
   if(graphe==NULL){
     printf("Problème d'allocation mémoire lors de la création du graphe");
@@ -105,8 +105,7 @@ NOEUD ajout_arete(int i,int j, NOEUD graphe){
   return graphe;
 }
 
-// Création des arêtes
-NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
+NOEUD creationT1(NOEUD graphe, int nbsommets){
   srandom(getpid());
   for(int i=0; i<nbsommets; i++){
     if(i<nbsommets/10){
@@ -123,7 +122,13 @@ NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
 		    }
       }
     }
-    else if(i<30 && i>9){ 
+  }
+  return graphe;
+}
+
+NOEUD creationT2(NOEUD graphe,int nbsommets){
+for(int i=0; i<nbsommets; i++){
+    if(i<30 && i>9){ 
     // Création des arêtes pour les tiers 2
     // Arêtes entre les tiers 2 et les tiers 1
       int nb_tiers1=(random()%2)+1;
@@ -151,9 +156,15 @@ NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
       graphe[i].poids[graphe[i].nb_voisin]=(random()%11)+10;
       graphe[tiers2].poids[graphe[tiers2].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin];
       graphe=ajout_arete(i, tiers2,graphe);
-	  }
+	    }
+    }
   }
-  else{
+  return graphe;
+}
+
+NOEUD creationT3(NOEUD graphe, int nbsommets){
+  for(int i=0; i<nbsommets; i++){
+  if(i>29){
     // création sommets de Tier3
     for(int j=1; j<=2; j++){ 
       int tiers2;
@@ -175,8 +186,15 @@ NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
     }
   }
   }
-graphe=table_routage_1(graphe,nbsommets);
   return graphe;
+}
+// Création des arêtes
+NOEUD implementationGraphe(NOEUD graphe,int nbsommets){
+  graphe=creationT1(graphe,nbsommets);
+  graphe=creationT2(graphe,nbsommets);
+  graphe=creationT3(graphe,nbsommets);
+  graphe=table_routage_1(graphe,nbsommets);
+return graphe;
 }
 
 // Permet la libération de la mémoire occupée par les structures de données du graphe
@@ -206,8 +224,8 @@ int marquage(NOEUD G, int nbsommets){
     }
   }
   //vérification --> 
- for(int i=0; i<nbsommets; i++){if (T[i]==0) return 1;}
- return 0;
+ for(int i=0; i<nbsommets; i++){if (T[i]==0) return 0;}
+ return 1;
 }
 
 NOEUD liste_destinataire(NOEUD graphe, int nbsommets){
@@ -252,7 +270,7 @@ int min_poids(int d[100], int min[100], int min_tab, int nbsommets){
   return ind;
 }
 
-NOEUD calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
+struct Noeud calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
 {
   int d[100];
   int pred[100];int min[100];int min_tab=0;
@@ -284,13 +302,13 @@ NOEUD calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
         }
       }
   } 
-  for(int i=0; i<nbsommets; i++){
- //  printf("la case %d de min est %d\n", i, min[i]);
-  // printf("le poid de %d à %d est %d son pred est %d", n.nom,graphe[i].nom, d[i], pred[i]);
-  // getchar();
-  }
-graphe=tableRoutage2(graphe, n,nbsommets,d, pred);  
-  return graphe;
+  n=tableRoutage2(graphe, n,nbsommets,d, pred); 
+  /*for(int i=0; i<nbsommets; i++){
+    printf("la case %d de min est %d\n", i, min[i]);
+    printf("le poid de %d à %d est %d son pred est %d", n.nom,graphe[i].nom, d[i], pred[i]);
+    getchar();
+  }*/
+  return n;
 }
 
 
@@ -318,7 +336,7 @@ for(int i=0; i<nbsommets; i++){
 return graphe;
 }
 
-NOEUD tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100])
+struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100])
 {
   for(int i = 0; i < nbsommets; i++)
   {
@@ -337,17 +355,104 @@ NOEUD tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int
       n.tableRoutage[1][i]=graphe[position].nom;
     }}
   }
-printf("en partant du noeud %d\n", n.nom);
-for (int i=0; i<nbsommets; i++){
-  printf("pour arriver a %d, on passe par %d\n", n.tableRoutage[0][i],n.tableRoutage[1][i]);
-}
-return graphe;
+  /*printf("en partant du noeud %d\n", n.nom);
+  for (int i=0; i<nbsommets; i++){
+    printf("pour arriver a %d, on passe par %d\n", n.tableRoutage[0][i],n.tableRoutage[1][i]);
+  } 
+  */
+  return n;
 }
 
 NOEUD tableRoutage(NOEUD graphe, int nbsommets)
 {
   for(int i=0; i<nbsommets; i++)
-   graphe=calcul_distance(graphe, nbsommets, graphe[i]);
-    
-return graphe;
+  graphe[i]=calcul_distance(graphe, nbsommets,graphe[i]);
+  return graphe;
 }
+
+void purge_stdinbuf()
+{
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+}
+
+// fct de saisie noeud utilisateur
+// en mode d'exécution 0 -> saisie du noeud émetteur
+// en mode d'exécution 1 -> saisie du noeud destinataire
+int saisie_noeud(int mode)
+{
+  if(mode==0)
+  {
+    int noeud_emet;
+    scanf("%d", &noeud_emet);
+    purge_stdinbuf();
+    while((noeud_emet>99)||(noeud_emet<0))
+    {
+      printf("Noeud émetteur non valide, veuillez recommencer\n");
+      noeud_emet=saisie_noeud(0);
+    }
+    return noeud_emet;
+  }
+  if(mode==1)
+  {
+    int noeud_dest;
+    scanf("%d", &noeud_dest);
+    purge_stdinbuf();
+    while((noeud_dest>99)||(noeud_dest<0))
+    {
+      printf("Noeud destinataire non valide, veuillez recommencer\n");
+      noeud_dest = saisie_noeud(1);
+    }
+    return noeud_dest;
+  }
+  return 0;
+}
+
+void affiche_chemin(int emet,int transit[]){
+  int cpt=0;
+  for(int i=0; i<10; i++){
+    if(transit[i]!=-1) cpt++;
+  }
+printf("\nChemin emprunté:\n\n");
+  printf("   [%d]--->",emet);
+  for(int i=0;i<cpt;i++){
+    if(i==cpt-1) printf("[%d]\n\n",transit[i]);
+    else printf("(%d)--->",transit[i]);
+  } 
+}
+
+void retrouve_chemin(NOEUD graphe, int nbsommets)
+{ 
+  printf("-----------------------------------------\n");
+  printf("Les noeuds Tier 1 sont numérotés de 0 à 9\n");
+  printf("Les noeuds Tier 2 sont numérotés de 10 à 29\n");
+  printf("Les noeuds Tier 3 sont numérotés de 30 à 99\n");
+  printf("-----------------------------------------\n");
+  printf("Veuillez saisir un noeud émetteur \n");
+  int noeud_emet = saisie_noeud(0); 
+  printf("-----------------------------------------\n");
+  printf("Veuillez saisir un noeud destinataire\n");
+  int noeud_dest = saisie_noeud(1);
+  printf("-----------------------------------------\n");
+  if(noeud_dest==noeud_emet) 
+    {
+    printf("Les noeuds saisis sont identiques, veuillez saisir un noeud destinaire différent\n");
+     saisie_noeud(1);
+    }
+  
+  printf("Pour arriver au noeud %d l'information passe par les noeuds :\n", noeud_dest); 
+  int transit[10];
+  int n=0;
+  int emet=noeud_emet;
+  for(int i=0;i<10;i++) transit[i]=-1;
+  while(graphe[noeud_emet].nom!=graphe[noeud_dest].nom)
+  {
+    printf("%d\n",graphe[noeud_emet].tableRoutage[1][noeud_dest]%100);
+    transit[n]=graphe[noeud_emet].tableRoutage[1][noeud_dest]%100; n++;
+    noeud_emet=(graphe[noeud_emet].tableRoutage[1][noeud_dest])%100;
+  }
+  printf("-----------------------------------------\n");
+  affiche_chemin(emet,transit);
+  printf("-----------------------------------------\n");
+}
+
