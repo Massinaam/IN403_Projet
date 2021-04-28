@@ -1,7 +1,6 @@
-# Projet Algorithmique
+# Projet d'Algorithmique
 
 > Projet IN403 - UVSQ
->
 
 ## Sommaire principal
 - [Introduction](#introduction)
@@ -49,7 +48,7 @@ Retour [Sommaire I](#sommaire-i)
 struct Noeud
 {
 	int nom;			// nom du noeud considéré (représenté par un entier)
-	int nb_voisin; 			// nombre de voisins, représente aussi la position du nouveau noeud à insérer
+	int nb_voisin; 			// nombre de voisins
 	struct Noeud* suivant;		// pointe le voisin suivant dans la liste chaînée, le cas échéant
 	int* poids;			// ième poids de l'arrête entre le noeud et le ième voisin du noeud
  	int tableRoutage[2][100]; 	// table de routage du noeud
@@ -142,7 +141,7 @@ for(int i=0; i<nbsommets; i++){
         graphe[tiers1].poids[graphe[tiers1].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin]; //poids de l'arête dans le sens inverse (graphe non orienté)
         graphe=ajout_arete(i, tiers1,graphe); //ajout de l'arête dans le graphe
         }
- ```
+```
 Ensuite, on doit créer les arêtes entre les noeuds tier2. Pour chaque noeud tier2 considéré, on vérifie à l'aide la fonction [`voisin_tiers2`](#int-voisin_tiers2) s'il a atteint le nombre maximal de voisins tier2 (au plus 3) et on s'assure que le noeud considéré n'est pas connecté avec lui-même en créant les arêtes.
 
 Retour [Sommaire I](#sommaire-i)
@@ -346,7 +345,7 @@ NOEUD liste_destinataire(NOEUD graphe, int nbsommets){
 ### *NOEUD* calcul_distance
 Algorithme de Dijkstra pour un noeud S donné.
 - La première étape correspond à l'initalisation des tableaux d et pred :
-`min[0]` = S. Pour tout sommet i différent de S, si l'arc (i,S) existe alors `d[i]`=poids de l'arête entre i et S et `pred[i]` = S, sinon `d` = infini(2147483647 dans notre cas).
+`min[0]` = S. Pour tout sommet i différent de S, si l'arc (i,S) existe alors `d[i]`=poids de l'arête entre i et S et `pred[i]` = S, sinon `d` = infini (2147483647 dans notre cas).
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -366,7 +365,7 @@ struct Noeud calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
 S'il existe encore au moins un noeud non marqué :
 - L'étape suivante consistera à chercher la distance `d` minimale pour tous les sommets encore non-traités et à ajouter l'indice de ce sommet dans le tableau `min`. 
 - Pour tout sommet du graphe i différent de l'indice
-  On prend la valeur minimale entre la distance actuelle de i et (distance+poids) entre indice et i, si la valeur minimale n'est pas la distance actuelle, alors le prédecésseur de i devient le noeud indice.
+  On prend la valeur minimale entre la distance actuelle de i et (distance+poids) entre indice et i, si la valeur minimale n'est pas la distance actuelle, alors le prédécesseur de i devient le noeud indice.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -391,7 +390,7 @@ Retour [Sommaire III](#sommaire-iii)
 }
 ```
 ### *NOEUD* table_routage_1
-`table_routage_1` permet de remplir les noms des destinataires dans la première colonne de la table de routage.
+`table_routage_1` permet de remplir les noms des destinataires dans la première colonne de la table de routage. Pour mieux comprendre de quoi il s'agit, cf. [`tableRoutage`](#noeud-tableroutage)
 
 Retour [Sommaire III](#sommaire-iii)
 
@@ -407,12 +406,13 @@ return graphe;
 ```
 ### *NOEUD* tableRoutage2
 Cette fonction permet de remplir la deuxième colonne de la table de routage i.e. la liste des voisins directs des destinataires avec le plus court chemin pour un noeud donné.
-Pour un noeud n donné, on fait sa table de routage, plusieurs cas sont possibles en parcourant le tableau de noeuds :
-- L'indice i = nom de n : alors le chemin le plus court est n puisque ce sont les mêmes
-- L'indice i != nom de n :
-  - le prédécesseur de i = nom de n : alors il existe une arête entre i et n et c'est le chemin le plus court
-  - le prédécesseur de i != nom de n : alors il n'existe pas d'arête entre i et n : 
-     on regarde alors les prédécesseurs de i jusqu'à trouver prédécesseur de i-k = nom de n, ce qui signifie qu'il existe une arête entre i-k et n, le chemin le plus court de n à i sera : n+les k prédécesseurs+i.
+Pour un `Noeud n` donné, on fait sa table de routage, plusieurs cas sont possibles en parcourant le tableau de noeuds :
+
+- L'indice `i` = nom de n : alors le chemin le plus court est n puisque ce sont les mêmes
+- L'indice `i` != nom de n :
+  - le `prédécesseur de i` =  nom de `n` : alors il existe une arête entre `i` et `n` et c'est le chemin le plus court
+  - le prédécesseur de `i` != nom de `n` : alors il n'existe pas d'arête entre `i` et `n` : 
+     on regarde alors les prédécesseurs de `i` jusqu'à trouver prédécesseur de `i`-k = nom de `n`, ce qui signifie qu'il existe une arête entre i-k et `n`, le chemin le plus court de `n` à `i` sera : `n`+les k prédécesseurs+`i`.
 
 Retour [Sommaire III](#sommaire-iii)
 
@@ -533,7 +533,7 @@ void retrouve_chemin(NOEUD graphe, int nbsommets)
   printf("Veuillez saisir un noeud destinataire\n");
   int noeud_dest = saisie_noeud(1);
                             //...//
-  ```
+```
 Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche un message signalant que les sommets entrés sont les mêmes.
  ```c
   if(noeud_dest==noeud_emet) 
@@ -542,10 +542,10 @@ Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche
      saisie_noeud(1);
                             //...//
     }
-  ```
-Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage).
-Le chemin est alors stocké dans le tableau `transit` et on sauvegarde la valeur du noeud émetteur dans la variable `noeud_emet`.
-Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin) qui prend en argument les deux variables citées précedemment.
+ ```
+Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage) tableau `transit` et on sauvegarde la valeur du noeud émetteur dans la variable `noeud_emet`.
+Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin)tées précédemment.
+
   ```c
   printf("Pour arriver au noeud %d l'information passe par les noeuds :\n", noeud_dest); 
   int transit[10];
@@ -562,8 +562,9 @@ Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-af
   affiche_chemin(emet,transit);
   printf("-----------------------------------------\n");
 }
-```
+  ```
 Retour [Sommaire IV](#sommaire-iv)
 Retour [Sommaire principal](#sommaire-principal)
 
 > BEN AYED Khadija, DEMANGE Noé, VILLA Romain, AMMAD Massina.
+
