@@ -255,8 +255,6 @@ int marquage(NOEUD G, int nbsommets){
 - [int min_poids](#int-min_poids)
 - [int verif_arete](#int-verif_arete)
 - [NOEUD liste_destinataire](#noeud-liste_destinataire)
-- [void retrouve_chemin](#void-retrouve_chemin)
-- [int saisie_noeud](#int-saisie_noeud)
 - [NOEUD calcul_distance](#noeud-calcul_distance)
 - [NEOUD table_routage_1](#noeud-table_routage_1)
 - [NOEUD tableRoutage2](#noeud-tableRoutage2)
@@ -324,52 +322,118 @@ NOEUD liste_destinataire(NOEUD graphe, int nbsommets){
 }
 ```
 
-### *void* retrouve_chemin
-Cette fonction permet de retrouver le plus court chemin entre deux noeuds entrés par l'utilisateur. 
-Pour cela, on demande à l'utilisateur d'entrer un noeud émetteur et un noeud destinataire à l'aide de la fonction [`saisie_noeud`](#int-saisie_noeud).
+### *NOEUD* calcul_distance
+Algorithme de Dijkstra.
 
-Retour [sommaire](#sommaire-iii)
 ```c
-void retrouve_chemin(NOEUD graphe, int nbsommets)
-{ 
-  printf("Veuillez saisir un noeud émetteur \n");
-  int noeud_emet = saisie_noeud(0); 
- 
-  printf("Veuillez saisir un noeud destinataire\n");
-  int noeud_dest = saisie_noeud(1);
-                            //...//
-  ```
-Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche un message signalant que les sommets entrés sont les mêmes.
- ```c
-  if(noeud_dest==noeud_emet) 
-    {
-    printf("Les noeuds saisis sont identiques, veuillez saisir un noeud destinaire différent\n");
-     saisie_noeud(1);
-                            //...//
-    }
-  ```
-Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage).
-Le chemin est alors stocké dans le tableau `transit` et on sauvegarde la valeur du noeud émetteur dans la variable `noeud_emet`.
-Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin) qui prend en argument les deux variables citées précedemment.
-
-Retour [sommaire](#sommaire-iii)
-  ```c
-  printf("Pour arriver au noeud %d l'information passe par les noeuds :\n", noeud_dest); 
-  int transit[10];
-  int n=0;
-  int emet=noeud_emet;
-  for(int i=0;i<10;i++) transit[i]=-1;
-  while(graphe[noeud_emet].nom!=graphe[noeud_dest].nom)
-  {
-    printf("%d\n",graphe[noeud_emet].tableRoutage[1][noeud_dest]%100);
-    transit[n]=graphe[noeud_emet].tableRoutage[1][noeud_dest]%100; n++;
-    noeud_emet=(graphe[noeud_emet].tableRoutage[1][noeud_dest])%100;
+struct Noeud calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
+{
+  int d[100];
+  int pred[100];int min[100];int min_tab=0;
+  for(int i=0; i<nbsommets; i++){
+    if(graphe[i].nom!=n.nom){
+      int a=verif_arete(n,graphe[i].nom);
+      if(a!=-1) {d[i]=n.poids[a]; pred[i]=n.nom; }
+      else d[i]=2147483647;
+    } 
+    else {d[i]=0; pred[i]=n.nom; }
   }
-  printf("-----------------------------------------\n");
-  affiche_chemin(emet,transit);
-  printf("-----------------------------------------\n");
+  min[min_tab]=n.nom;
+  min_tab++;
+  int nb_rep; 
+  for(nb_rep=0; nb_rep<nbsommets-1; nb_rep++) {
+     int sommet=min_poids(d,min,min_tab,nbsommets);
+      min[min_tab]=graphe[sommet].nom; min_tab++;
+      for(int j=0; j<nbsommets; j++){
+        if(j!=n.nom%100 && j!=sommet){
+          int b=verif_arete(graphe[sommet], graphe[j].nom);
+          if(b!=-1 && d[j]>d[sommet]+graphe[sommet].poids[b] && d[sommet]!=2147483647){
+            d[j]=d[sommet]+graphe[sommet].poids[b];
+            pred[j]=graphe[sommet].nom;
+          }
+        }
+      }
+  } 
+  n=tableRoutage2(graphe, n,nbsommets,d, pred);
+  return n;
 }
 ```
+### *NOEUD* table_routage_1
+`table_routage_` permet de remplir les noms des destinataires dans la première colonne de la table de routage.
+
+Retour [sommaire](#sommaire-iii)
+
+```c
+NOEUD table_routage_1(NOEUD graphe, int nbsommets){
+for(int i=0; i<nbsommets; i++){
+  for(int j=0; j<nbsommets; j++){
+    graphe[i].tableRoutage[0][j]=graphe[j].nom;
+  }
+}
+return graphe;
+}
+```
+### *NOEUD* tableRoutage2
+Cette fonction permet de remplir la deuxième colonne de la table de routage i.e. la liste des voisins directs des destinataires avec le plus court chemin pour un noeud donné.
+Pour un noeud n donné, on fait sa table de routage, plusieurs cas sont possibles en parcourant le tableau de noeuds :
+- L'indice i = nom de n : alors le chemin le plus court est n puisque ce sont les mêmes
+- L'indice i != nom de n :
+  - le prédécesseur de i = nom de n : alors il existe une arête entre i et n et c'est le chemin le plus court
+  - le prédécesseur de i != nom de n : alors il n'existe pas d'arête entre i et n : 
+     on regarde alors les prédécesseurs de i jusqu'à trouver prédécesseur de i-k = nom de n, ce qui signifie qu'il existe une arête entre i-k et n, le chemin le plus court de n à i sera : n+les k prédécesseurs+i.
+
+Retour [sommaire](#sommaire-iii)
+
+```c
+struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100])
+{
+  for(int i = 0; i < nbsommets; i++)
+  {
+   if(n.nom%100!=i){
+    if(pred[i]==n.nom%100){
+      n.tableRoutage[1][i]=n.tableRoutage[0][i];
+    }
+    else{ 
+    int position = i;
+    while(verif_arete(n,graphe[position].nom)==-1){
+      position=pred[position]%100;
+      }
+      n.tableRoutage[1][i]=graphe[position].nom;
+    }
+   }
+  }
+  return n;
+}
+```
+### *NOEUD* tableRoutage
+Cette fonction permet de construire la table de routage pour tous les noeuds.
+```c
+NOEUD tableRoutage(NOEUD graphe, int nbsommets)
+{
+  for(int i=0; i<nbsommets; i++)
+  graphe[i]=calcul_distance(graphe, nbsommets,graphe[i]);
+  return graphe;
+}
+```
+Retour [sommaire](#sommaire-iii)
+
+## Divers
+### Sommaire IV
+- [void libererGraphe](#void-libererGraphe)
+- [void affiche_noeuds](#void-affiche_noeuds)
+- [void affiche_chemin](#void-affiche_chemin)
+- [int saisie_noeud](#int-saisie_noeud)
+- [void retrouve_chemin](#void-retrouve_chemin)
+
+### *void* libererGraphe
+Cette fonction libère la mémoire occupée par les structures de données du graphe lorsqu'il n'est plus utile au programme.
+
+### *void* affiche_noeuds
+Cette fonction affiche les noeuds du graphe.
+
+### *void* affiche_chemin
+Cette fonction affiche le plus court chemin d'un noeud émetteur à un noeud destinataire.
+
 ### *int* saisie_noeud
 Cette fonction nous permet de récupérer les noeuds émetteur et destinataire entrés par l'utilisateur tout en vérifiant sa saisie. 
 Selon un mode entré en argument : 
@@ -407,95 +471,52 @@ int saisie_noeud(int mode)
   return 0;
 }
 ```
-Retour [sommaire](#sommaire-iii)
+Retour [sommaire](#sommaire-iv)
 
-### *NOEUD* calcul_distance
-Algorithme de Dijkstra frr.
-
-```c
-struct Noeud calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
-{
-  int d[100];
-  int pred[100];int min[100];int min_tab=0;
-  for(int i=0; i<nbsommets; i++){
-    if(graphe[i].nom!=n.nom){
-      int a=verif_arete(n,graphe[i].nom);
-      if(a!=-1) {d[i]=n.poids[a]; pred[i]=n.nom; }
-      else d[i]=2147483647;
-    } 
-    else {d[i]=0; pred[i]=n.nom; }
-  }
-  min[min_tab]=n.nom;
-  min_tab++;
-  int nb_rep; 
-  for(nb_rep=0; nb_rep<nbsommets-1; nb_rep++) {
-     int sommet=min_poids(d,min,min_tab,nbsommets);
-      min[min_tab]=graphe[sommet].nom; min_tab++;
-      for(int j=0; j<nbsommets; j++){
-        if(j!=n.nom%100 && j!=sommet){
-          int b=verif_arete(graphe[sommet], graphe[j].nom);
-          if(b!=-1 && d[j]>d[sommet]+graphe[sommet].poids[b] && d[sommet]!=2147483647){
-            d[j]=d[sommet]+graphe[sommet].poids[b];
-            pred[j]=graphe[sommet].nom;
-          }
-        }
-      }
-  } 
-  n=tableRoutage2(graphe, n,nbsommets,d, pred);
-  return n;
-}
-```
-
-### *NOEUD* table_routage_1
+### *void* retrouve_chemin
+Cette fonction permet de retrouver le plus court chemin entre deux noeuds entrés par l'utilisateur. 
+Pour cela, on demande à l'utilisateur d'entrer un noeud émetteur et un noeud destinataire à l'aide de la fonction [`saisie_noeud`](#int-saisie_noeud).
 
 Retour [sommaire](#sommaire-iii)
 ```c
-NOEUD table_routage_1(NOEUD graphe, int nbsommets){
-for(int i=0; i<nbsommets; i++){
-  for(int j=0; j<nbsommets; j++){
-    graphe[i].tableRoutage[0][j]=graphe[j].nom;
-  }
-}
-return graphe;
-}
-```
-### *NOEUD* tableRoutage2
-Retour [sommaire](#sommaire-iii)
-```c
-struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[100], int pred[100])
-{
-  for(int i = 0; i < nbsommets; i++)
+void retrouve_chemin(NOEUD graphe, int nbsommets)
+{ 
+  printf("Veuillez saisir un noeud émetteur \n");
+  int noeud_emet = saisie_noeud(0); 
+ 
+  printf("Veuillez saisir un noeud destinataire\n");
+  int noeud_dest = saisie_noeud(1);
+                            //...//
+  ```
+Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche un message signalant que les sommets entrés sont les mêmes.
+ ```c
+  if(noeud_dest==noeud_emet) 
+    {
+    printf("Les noeuds saisis sont identiques, veuillez saisir un noeud destinaire différent\n");
+     saisie_noeud(1);
+                            //...//
+    }
+  ```
+Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage).
+Le chemin est alors stocké dans le tableau `transit` et on sauvegarde la valeur du noeud émetteur dans la variable `noeud_emet`.
+Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin) qui prend en argument les deux variables citées précedemment.
+  ```c
+  printf("Pour arriver au noeud %d l'information passe par les noeuds :\n", noeud_dest); 
+  int transit[10];
+  int n=0;
+  int emet=noeud_emet;
+  for(int i=0;i<10;i++) transit[i]=-1;
+  while(graphe[noeud_emet].nom!=graphe[noeud_dest].nom)
   {
-   if(n.nom%100!=i){
-    if(pred[i]==n.nom%100){
-      n.tableRoutage[1][i]=n.tableRoutage[0][i];
-    }
-    else{ 
-    int position = i;
-    while(verif_arete(n,graphe[position].nom)==-1){
-      position=pred[position]%100;
-      }
-      n.tableRoutage[1][i]=graphe[position].nom;
-    }
-   }
+    printf("%d\n",graphe[noeud_emet].tableRoutage[1][noeud_dest]%100);
+    transit[n]=graphe[noeud_emet].tableRoutage[1][noeud_dest]%100; n++;
+    noeud_emet=(graphe[noeud_emet].tableRoutage[1][noeud_dest])%100;
   }
-  return n;
+  printf("-----------------------------------------\n");
+  affiche_chemin(emet,transit);
+  printf("-----------------------------------------\n");
 }
 ```
-
-### *NOEUD* tableRoutage
-Retour [sommaire](#sommaire-iii)
-
-## Divers
-### Sommaire IV
-- [void libererGraphe](#void-libererGraphe)
-- [void affiche_noeuds](#void-affiche_noeuds)
-- [void affiche_chemin](#void-affiche_chemin)
-
-### *void* libererGraphe
-Cette fonction libère la mémoire occupée par les structures de données du graphe lorsqu'il n'est plus utile au programme.
-### *void* affiche_noeuds
-### *void* affiche_chemin
-
+Retour [sommaire](#sommaire-iv)
 
 > **Powered by [©Massinaam](https://github.com/Massinaam) et [©romain-villa](https://github.com/romain-villa)**
