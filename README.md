@@ -11,6 +11,7 @@
 - [Recherche du plus court chemin & table de routage](#recherche-du-plus-court-chemin--table-de-routage)
 - [Divers](#divers)
 
+
 ## Introduction
 
 ### Présentation du problème
@@ -37,9 +38,13 @@ Tout d'abord, il faut créer les fichiers nécessaires au projet : [`Makefile`](
 - [int voisin_tiers2](#int-voisin_tiers2)
 - [int voisin_tiers3](#int-voisin_tiers3)
 
+Retour [Sommaire principal](#sommaire-principal)
+
 
 ### *struct* Noeud
 La structure de données permettant de stocker le graphe est composée de 5 champs représentant un noeud du graphe. Un nom, un nombre de voisins, une liste chaînée de ceux-ci (voisins), les poids reliant le sommet à ses voisins, mais aussi une table de routage. A partir de cette structure, on définit le graphe comme un ensemble de noeuds, i.e *struct* Noeud* NOEUD.
+
+Retour [Sommaire I](#sommaire-i)
 ```c
 struct Noeud
 {
@@ -166,7 +171,7 @@ Retour [Sommaire I](#sommaire-i)
   return graphe;
 }
 ```
-Retour [Sommaire](#sommaire-i)
+Retour [Sommaire I](#sommaire-i)
 
 ### *NOEUD* creationT3
 Cette fonction connecte les noeuds tier3 à deux noeuds tier2 et un autre noeud tier3 de façon aléatoire. Le code est similaire à ce qui à été vu précedemment ([`creationT2`](#noeud-creationT2)) et même raisonnement.
@@ -229,6 +234,8 @@ Retour [Sommaire I](#sommaire-i)
 - [void explorer](#void-explorer)
 - [int marquage](#int-marquage)
 
+Retour [Sommaire principal](#sommaire-principal)
+
 ### *void* explorer
 Cette fonction fait un parcours en profondeur du graphe considéré. Elle est utile pour évaluer la connexité du graphe dans [`marquage`](#int-marquage).
 
@@ -271,6 +278,8 @@ int marquage(NOEUD G, int nbsommets){
 - [NEOUD table_routage_1](#noeud-table_routage_1)
 - [NOEUD tableRoutage2](#noeud-tableRoutage2)
 - [NOEUD tableRoutage](#noeud-tableRoutage)
+
+Retour [Sommaire principal](#sommaire-principal)
 
 ### *int* dans_min
 Cette fonction a pour but, pour un tableau `min`, de savoir si pour un noeud `j` donné, `j` appartient ou non à ce tableau. Si `j` est dans `min` alors la fonction retourne 1, 0 sinon. Cette fonction, lorsqu'elle est appelée, permet de vérifier si un sommet a été traité ou non, si ce sommet est dans le tableau alors il a été traité, sinon, le noeud ne l'est pas encore.
@@ -452,23 +461,22 @@ NOEUD tableRoutage(NOEUD graphe, int nbsommets)
 - [int saisie_noeud](#int-saisie_noeud)
 - [void retrouve_chemin](#void-retrouve_chemin)
 
+Retour [Sommaire principal](#sommaire-principal)
+
 ### *void* libererGraphe
 Cette fonction libère la mémoire occupée par les structures de données du graphe lorsqu'il n'est plus utile au programme.
 
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
+Retour [Sommaire principal](#sommaire-principal)
 
 ### *void* affiche_noeuds
 Cette fonction affiche les noeuds du graphe.
-
-Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
 
 ### *void* affiche_chemin
 Cette fonction affiche le plus court chemin d'un noeud émetteur à un noeud destinataire.
 
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
+Retour [Sommaire principal](#sommaire--principal)
 
 ### *int* saisie_noeud
 Cette fonction nous permet de récupérer les noeuds émetteur et destinataire entrés par l'utilisateur tout en vérifiant sa saisie. 
@@ -508,14 +516,14 @@ int saisie_noeud(int mode)
 }
 ```
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
+Retour [Sommaire principal](#sommaire--principal)
 
 ### *void* retrouve_chemin
 Cette fonction permet de retrouver le plus court chemin entre deux noeuds entrés par l'utilisateur. 
 Pour cela, on demande à l'utilisateur d'entrer un noeud émetteur et un noeud destinataire à l'aide de la fonction [`saisie_noeud`](#int-saisie_noeud).
 
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
+Retour [Sommaire principal](#sommaire-principal)
 ```c
 void retrouve_chemin(NOEUD graphe, int nbsommets)
 { 
@@ -556,6 +564,6 @@ Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-af
 }
 ```
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire)
+Retour [Sommaire principal](#sommaire-principal)
 
 > BEN AYED Khadija, DEMANGE Noé, VILLA Romain, AMMAD Massina.
