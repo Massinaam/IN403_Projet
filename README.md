@@ -115,10 +115,10 @@ NOEUD creationT1(NOEUD graphe, int nbsommets){
 
 ### *NOEUD* creationT2
 Cette fonction connecte les noeuds tier2 entre eux et aux noeuds tier1 de façon aléatoire. Un noeud de type tier2 a un ou deux voisin(s) de tier1 et 2, ou alors, 3 voisins de tier2.
-Ici, on réalise les mêmes opérations que dans [`creationT1`](#noeud-creationt1), en plus complexe en raison de la spécificité des noeuds de transit. Les arêtes partant d'un tier2 sont pondérées entre 10 et 20.
-Concrètement, pour un noeud tier2 considéré, on prend un noeud tier1 et on s'assure qu'il ne pré-existe pas d'arrête entre eux grâce à la fonction [`different`](#noeud-different) pour créer une arête pondérée aléatoirement.
-Ensuite, on doit créer les arêtes entre les noeuds tier2. Pour chaque noeud tier2 considéré, on vérifie à l'aide la fonction [`voisin_tiers2`](#int-voisin_tiers2) s'il a atteint le nombre maximal de voisins tier2 (au plus 3) et on s'assure que le noeud considéré n'est pas connecté avec lui-même en créant les arêtes.
 
+Ici, on réalise les mêmes opérations que dans [`creationT1`](#noeud-creationt1), en plus complexe en raison de la spécificité des noeuds de transit. Les arêtes partant d'un tier2 sont pondérées entre 10 et 20.
+
+Concrètement, pour un noeud tier2 considéré, on prend un noeud tier1 et on s'assure qu'il ne pré-existe pas d'arrête entre eux grâce à la fonction [`different`](#noeud-different) pour créer une arête pondérée aléatoirement.
 Retour [sommaire](#sommaire-i)
 ```c
 NOEUD creationT2(NOEUD graphe,int nbsommets){
@@ -135,6 +135,10 @@ for(int i=0; i<nbsommets; i++){
         graphe[tiers1].poids[graphe[tiers1].nb_voisin]=graphe[i].poids[graphe[i].nb_voisin]; //poids de l'arête dans le sens inverse (graphe non orienté)
         graphe=ajout_arete(i, tiers1,graphe); //ajout de l'arête dans le graphe
         }
+ ```
+  Ensuite, on doit créer les arêtes entre les noeuds tier2. Pour chaque noeud tier2 considéré, on vérifie à l'aide la fonction [`voisin_tiers2`](#int-voisin_tiers2) s'il a atteint le nombre maximal de voisins tier2 (au plus 3) et on s'assure que le noeud considéré n'est pas connecté avec lui-même en créant les arêtes.
+  Retour [sommaire](#sommaire-i)
+```c
     int nb_tiers2=(random()%2)+2;
     nb_tiers2 = nb_tiers2-voisin_tiers2(graphe[i]);
     for(int j=1; j<=nb_tiers2; j++){
@@ -159,6 +163,7 @@ for(int i=0; i<nbsommets; i++){
   return graphe;
 }
 ```
+Retour [sommaire](#sommaire-i)
 
 ### *NOEUD* creationT3
 Cette fonction connecte les noeuds tier3 à deux noeuds tier2 et un autre noeud tier3 de façon aléatoire. Le code est similaire à ce qui à été vu précedemment ([`creationT2`](#noeud-creationT2)) et même raisonnement.
@@ -428,11 +433,17 @@ Retour [sommaire](#sommaire-iii)
 ### *void* libererGraphe
 Cette fonction libère la mémoire occupée par les structures de données du graphe lorsqu'il n'est plus utile au programme.
 
+Retour [sommaire](#sommaire-iv)
+
 ### *void* affiche_noeuds
 Cette fonction affiche les noeuds du graphe.
 
+Retour [sommaire](#sommaire-iv)
+
 ### *void* affiche_chemin
 Cette fonction affiche le plus court chemin d'un noeud émetteur à un noeud destinataire.
+
+Retour [sommaire](#sommaire-iv)
 
 ### *int* saisie_noeud
 Cette fonction nous permet de récupérer les noeuds émetteur et destinataire entrés par l'utilisateur tout en vérifiant sa saisie. 
@@ -518,5 +529,3 @@ Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-af
 }
 ```
 Retour [sommaire](#sommaire-iv)
-
-> **Powered by [©Massinaam](https://github.com/Massinaam) et [©romain-villa](https://github.com/romain-villa)**
