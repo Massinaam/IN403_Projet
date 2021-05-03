@@ -14,16 +14,16 @@
 ## Introduction
 
 ### Présentation du problème
-Nous souhaitons créer un réseau connexe et non orienté matérialisé par un graphe. Ce dernier est caractérisé par trois types de "noeuds" ou sommets : tier1, tier2 et tier3. Les premiers sont très connectés entre eux, les seconds relativement connectés entre eux et aux premiers, et enfin les tier3 sont plutôt des noeuds de périphérie, peu connectés entre eux mais connectés aux noeuds de tier2 qu'on pourrait qualifier de noeud de transit. Chaque lien entre sommets est pondéré, une valeur respective leur est attitrée représentant le "coût de transit", par exemple en terme de durée. Cela illustre schématiquement le fonctionnement d'un réseau au sens algorithmique, et soulève une question fondamentale : quel-est le chemin optimal pour envoyer une information d'un sommet x vers un sommet y, en terme de "coût de transit" ?
+Nous souhaitons créer un réseau connexe et non orienté matérialisé par un graphe. Ce dernier est caractérisé par trois types de "nœuds" ou sommets : tier1, tier2 et tier3. Les premiers sont très connectés entre eux, les seconds relativement connectés entre eux et aux premiers, et enfin les tier3 sont plutôt des nœuds de périphérie, peu connectés entre eux mais connectés aux nœuds de tier2 qu'on pourrait qualifier de nœud de transit. Chaque lien entre sommets est pondéré, une valeur respective leur est attitrée représentant le "coût de transit", par exemple en terme de durée. Cela illustre schématiquement le fonctionnement d'un réseau au sens algorithmique, et soulève une question fondamentale : quel-est le chemin optimal pour envoyer une information d'un sommet x vers un sommet y, en terme de "coût de transit" ?
 
 ### Pistes de résolution
-Pour répondre à cet interrogation avec un programme informatique, il convient de créer un graphe avec les propriétés susdites et réfléchir à une structure de données pour le stocker en mémoire. Ensuite, il faut établir une table de routage pour chaque noeud, il sera nécessaire de choisir un algorithme de plus court chemin parmi ceux que l'on connait pour y parvenir. Il suffit ensuite d'exploiter ces tables de routage pour établir le chemin optimal en terme de coût pour transiter un paquet d'informations d'un noeud x vers un noeud y.
+Pour répondre à cet interrogation avec un programme informatique, il convient de créer un graphe avec les propriétés susdites et réfléchir à une structure de données pour le stocker en mémoire. Ensuite, il faut établir une table de routage pour chaque nœud, il sera nécessaire de choisir un algorithme de plus court chemin parmi ceux que l'on connait pour y parvenir. Il suffit ensuite d'exploiter ces tables de routage pour établir le chemin optimal en terme de coût pour transiter un paquet d'informations d'un nœud x vers un nœud y.
 
 ### Choix du langage de programmation
 Nous avons choisi de programmer cette application en langage C, nous nous sentons plus à l'aise avec celui-ci d'une part, et d'autre part, c'est un langage réputé pour sa rapidité d'exécution, pas forcément négligeable lorsqu'il s'agit de réaliser beaucoup de calculs et de comparaison. Tous les codes sont mis en fichiers annexes. A noter que les codes que vous verrez ici sont à titre illustratif, ils ne sont pas voués à être testés sur machine. Le groupe décline toute responsabilité en cas de réclamation sur le code à visée pédagogique.
 
 ## Canevas
-Tout d'abord, il faut créer les fichiers nécessaires au projet : [`Makefile`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/Makefile), [`graphe.h`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/graphe.h), [`graphe.c`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/graphe.c) et [`main.c`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/main.c). Le code source est librement accessible sur github dans le dossier [IN403_Projet de @Massinaam](https://github.com/Massinaam/IN403_Projet).
+Tout d'abord, il faut créer les fichiers nécessaires au projet : [`Makefile`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/Makefile), [`graphe.h`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/graphe.h), [`graphe.c`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/graphe.c) et [`main.c`](https://github.com/Massinaam/IN403_Projet/blob/818456ce6c2355a5d19f8b53cc096493bdb17c32/main.c). Le code source est librement accessible sur GitHub dans le dossier [IN403_Projet de @Massinaam](https://github.com/Massinaam/IN403_Projet).
 
 ## Création du graphe
 #### Sommaire I
@@ -41,7 +41,7 @@ Retour [Sommaire principal](#sommaire-principal)
 
 
 ### *struct* Noeud
-La structure de données permettant de stocker le graphe est composée de 5 champs représentant un noeud du graphe. Un nom, un nombre de voisins, une liste chaînée de ceux-ci (voisins), les poids reliant le sommet à ses voisins, mais aussi une table de routage. A partir de cette structure, on définit le graphe comme un ensemble de noeuds, i.e *struct* Noeud* NOEUD.
+La structure de données permettant de stocker le graphe est composée de 5 champs représentant un nœud du graphe. Un nom, un nombre de voisins, une liste chaînée de ceux-ci (voisins), les poids reliant le sommet à ses voisins, mais aussi une table de routage. A partir de cette structure, on définit le graphe comme un ensemble de nœuds, i.e *struct* Noeud* NOEUD.
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -58,9 +58,9 @@ typedef struct Noeud* NOEUD;		// matérialise le graphe (ensemble de struct Noeu
 
 
 ### *NOEUD* creerGraphe
-Cette fonction permet la création d'un graphe (I), ici de 100 noeuds, auxquels un "type" (tier1, tier2 ou tier3) est donné de façon à "ordonner" les tier1 de l'indice 0 à 9, les tier2 de 10 à 29 et les tier3 de 30 à 99. 
-On nomme ensuite les sommets selon ce raisonnement : le chiffre des centaines indique le type du noeud et les suivants indiquent sa position dans le tableau de noeuds (le graphe) (II).
-(III) Enfin, on alloue la mémoire maximale occupée par le tableau de voisins et de pondération pour chaque noeud du graphe et selon son type.
+Cette fonction permet la création d'un graphe (I), ici de 100 nœuds, auxquels un "type" (tier1, tier2 ou tier3) est donné de façon à "ordonner" les tier1 de l'indice 0 à 9, les tier2 de 10 à 29 et les tier3 de 30 à 99. 
+On nomme ensuite les sommets selon ce raisonnement : le chiffre des centaines indique le type du nœud et les suivants indiquent sa position dans le tableau de nœuds (le graphe) (II).
+(III) Enfin, on alloue la mémoire maximale occupée par le tableau de voisins et de pondération pour chaque nœud du graphe et selon son type.
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -92,7 +92,7 @@ NOEUD creerGraphe(int nbsommets){
 }
 ```
 ### *NOEUD* creationT1
-Cette fonction connecte les noeuds tier1 entre eux avec 75% de chances que deux noeuds soient connectés entre eux. Brièvement, on balaye la partie de tableau de noeuds (graphe) correspondant aux tier1 et on ajoute des arrêtes entres eux (probabilité de 0.75), avec pondération p appropriée (4 < p < 11).
+Cette fonction connecte les nœuds tier1 entre eux avec 75% de chances que deux nœuds soient connectés entre eux. Brièvement, on balaye la partie de tableau de nœuds (graphe) correspondant aux tier1 et on ajoute des arêtes entre eux (probabilité de 0.75), avec pondération p appropriée (4 < p < 11).
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -110,7 +110,7 @@ NOEUD creationT1(NOEUD graphe, int nbsommets){
 				      graphe=ajout_arete(i, j, graphe);
             }
           }		
-		    }
+		}
       }
     }
   }
@@ -119,11 +119,11 @@ NOEUD creationT1(NOEUD graphe, int nbsommets){
 ```
 
 ### *NOEUD* creationT2
-Cette fonction connecte les noeuds tier2 entre eux et aux noeuds tier1 de façon aléatoire. Un noeud de type tier2 a un ou deux voisin(s) de tier1 et 2, ou alors, 3 voisins de tier2.
+Cette fonction connecte les nœuds tier2 entre eux et aux nœuds tier1 de façon aléatoire. Un nœud de type tier2 a un ou deux voisin(s) de tier1 et 2, ou alors, 3 voisins de tier2.
 
-Ici, on réalise les mêmes opérations que dans [`creationT1`](#noeud-creationt1), en plus complexe en raison de la spécificité des noeuds de transit. Les arêtes partant d'un tier2 sont pondérées entre 10 et 20.
+Ici, on réalise les mêmes opérations que dans [`creationT1`](#noeud-creationt1), en plus complexe en raison de la spécificité des nœuds de transit. Les arêtes partant d'un tier2 sont pondérées entre 10 et 20.
 
-Concrètement, pour un noeud tier2 considéré, on prend un noeud tier1 et on s'assure qu'il ne pré-existe pas d'arrête entre eux grâce à la fonction [`different`](#noeud-different) pour créer une arête pondérée aléatoirement.
+Concrètement, pour un nœud tier2 considéré, on prend un nœud tier1 et on s'assure qu'il ne pré-existe pas d'arête entre eux grâce à la fonction [`different`](#noeud-different) pour créer une arête pondérée aléatoirement.
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -142,7 +142,7 @@ for(int i=0; i<nbsommets; i++){
         graphe=ajout_arete(i, tiers1,graphe); //ajout de l'arête dans le graphe
         }
 ```
-Ensuite, on doit créer les arêtes entre les noeuds tier2. Pour chaque noeud tier2 considéré, on vérifie à l'aide la fonction [`voisin_tiers2`](#int-voisin_tiers2) s'il a atteint le nombre maximal de voisins tier2 (au plus 3) et on s'assure que le noeud considéré n'est pas connecté avec lui-même en créant les arêtes.
+Ensuite, on doit créer les arêtes entre les nœuds tier2. Pour chaque nœud tier2 considéré, on vérifie à l'aide la fonction [`voisin_tiers2`](#int-voisin_tiers2) s'il a atteint le nombre maximal de voisins tiers2 (au plus 3) et on s'assure que le nœud considéré n'est pas connecté avec lui-même en créant les arêtes.
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -173,12 +173,12 @@ Retour [Sommaire I](#sommaire-i)
 Retour [Sommaire I](#sommaire-i)
 
 ### *NOEUD* creationT3
-Cette fonction connecte les noeuds tier3 à deux noeuds tier2 et un autre noeud tier3 de façon aléatoire. Le code est similaire à ce qui à été vu précedemment ([`creationT2`](#noeud-creationT2)) et même raisonnement.
+Cette fonction connecte les nœuds tier3 à deux nœuds tier2 et un autre nœud tier3 de façon aléatoire. Le code est similaire à ce qui à été vu précédemment : cf. [`creationT2`](#noeud-creationT2).
 
 Retour [Sommaire I](#sommaire-i)
 
 ### *NOEUD* implementationGraphe
-Afin d'implémenter le graphe, on appelle simplement les fonctions de création d'arêtes pour les différents types de noeuds. On fait ensuite appel à [`table_routage_1`](#noeud-table_routage_1) pour créer les tables de routage pour chaque noeud. Cf. partie [table de routage](#recherche-du-plus-court-chemin--table-de-routage).
+Afin d'implémenter le graphe, on appelle simplement les fonctions de création d'arêtes pour les différents types de nœuds. On fait ensuite appel à [`table_routage_1`](#noeud-table_routage_1) pour créer les tables de routage pour chaque nœud. Cf. partie [table de routage](#recherche-du-plus-court-chemin--table-de-routage).
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -192,7 +192,7 @@ return graphe;
 ```
 
 ### *NOEUD* different
-Cette fonction permet de vérifier s'il existe ou non un lien. Elle renvoie 0 si les noeuds sont connectés entre eux, sinon 1.
+Cette fonction permet de vérifier s'il existe ou non un lien. Elle renvoie 0 si les nœuds sont connectés entre eux, sinon 1.
 
 Retour [Sommaire I](#sommaire-i)
 ```c
@@ -207,7 +207,7 @@ int different(struct Noeud n1,NOEUD suivant, int nb_voisins){
 ```
 
 ### *int* voisin_tiers2
-Cette fonction retourne le nombre de noeuds voisin(s) de tier2 du `noeud n` entré en argument.
+Cette fonction retourne le nombre de nœuds voisin(s) de tier2 du `Noeud n` entré en argument.
 
 Retour [Sommaire I](#sommaire-i)
 
@@ -224,7 +224,7 @@ int voisin_tiers2(struct Noeud n){
 }
 ```
 ### *int* voisin_tiers3
-Cette fonction permet de vérifier si le `noeud n` entré en argument a un voisin de tier3, auquel cas elle retourne 1, sinon 0. (Même raisonnement de programmation que pour [`voisin_tiers2`](#int-voisin_tiers2).
+Cette fonction permet de vérifier si le `Noeud n` entré en argument a un voisin de tier3, auquel cas elle retourne 1, sinon 0. (Même raisonnement de programmation que pour [`voisin_tiers2`](#int-voisin_tiers2).
 
 Retour [Sommaire I](#sommaire-i)
 
@@ -281,7 +281,7 @@ int marquage(NOEUD G, int nbsommets){
 Retour [Sommaire principal](#sommaire-principal)
 
 ### *int* dans_min
-Cette fonction a pour but, pour un tableau `min`, de savoir si pour un noeud `j` donné, `j` appartient ou non à ce tableau. Si `j` est dans `min` alors la fonction retourne 1, 0 sinon. Cette fonction, lorsqu'elle est appelée, permet de vérifier si un sommet a été traité ou non, si ce sommet est dans le tableau alors il a été traité, sinon, le noeud ne l'est pas encore.
+Cette fonction a pour but, pour un tableau `min`, de savoir si pour un nœud `j` donné, `j` appartient ou non à ce tableau. Si `j` est dans `min` alors la fonction retourne 1, 0 sinon. Cette fonction, lorsqu'elle est appelée, permet de vérifier si un sommet a été traité ou non, si ce sommet est dans le tableau alors il a été traité, sinon, le nœud ne l'est pas encore.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -293,8 +293,8 @@ int dans_min(int min[100], int j, int min_tab){
 }
 ```
 ### *int* min_poids
-Cette fonction retourne l'indice du sommet ayant le poids minimum parmi les sommets non traités, à l'aide de [`dans_min`](#int-dans_min).
-On stocke la distance la plus petite pour un noeud donné et on récupère l'indice de ce noeud dans le tableau. On retourne `ind` qui correspond à l'indice du noeud ayant la distance la plus courte.
+Cette fonction retourne l'indice du sommet ayant le poids minimum parmi les sommets non-traités, à l'aide de [`dans_min`](#int-dans_min).
+On stocke la distance la plus petite pour un nœud donné et on récupère l'indice de ce nœud dans le tableau. On retourne `ind` qui correspond à l'indice du nœud ayant la distance la plus courte.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -314,7 +314,7 @@ int min_poids(int d[100], int min[100], int min_tab, int nbsommets){
 ```
 
 ### *int* verif_arete
-Cette fonction permet de vérifier si un noeud dont le `nom` est passé en argument est voisin d'un `Noeud n` auquel cas elle retourne la position du noeud voisin dans la liste des voisins de `Noeud n` ayant pour nom `nom`, -1 sinon.
+Cette fonction permet de vérifier si un nœud dont le `nom` est passé en argument est voisin d'un `Noeud n` auquel cas elle retourne la position du nœud voisin dans la liste des voisins de `Noeud n` ayant pour nom `nom`, -1 sinon.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c 
@@ -343,9 +343,9 @@ NOEUD liste_destinataire(NOEUD graphe, int nbsommets){
 ```
 
 ### *NOEUD* calcul_distance
-Algorithme de Dijkstra pour un noeud S donné.
-- La première étape correspond à l'initalisation des tableaux d et pred :
-`min[0]` = S. Pour tout sommet i différent de S, si l'arc (i,S) existe alors `d[i]`=poids de l'arête entre i et S et `pred[i]` = S, sinon `d` = infini (2147483647 dans notre cas).
+Algorithme de Dijkstra pour un nœud S donné.
+- La première étape correspond à initialisation des tableaux `d` et `pred` :
+  `min[0]` = S. Pour tout sommet `i` différent de S, si l'arc (`i`,S) existe alors `d[i]`=poids de l'arête entre `i` et S et `pred[i]` = S, sinon `d` = infini (2147483647 dans notre cas).
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -362,10 +362,10 @@ struct Noeud calcul_distance(NOEUD graphe, int nbsommets, struct Noeud n)
     else {d[i]=0; pred[i]=n.nom; }
   }
 ```
-S'il existe encore au moins un noeud non marqué :
+S'il existe encore au moins un nœud non marqué :
 - L'étape suivante consistera à chercher la distance `d` minimale pour tous les sommets encore non-traités et à ajouter l'indice de ce sommet dans le tableau `min`. 
-- Pour tout sommet du graphe i différent de l'indice
-  On prend la valeur minimale entre la distance actuelle de i et (distance+poids) entre indice et i, si la valeur minimale n'est pas la distance actuelle, alors le prédécesseur de i devient le noeud indice.
+- Pour tout sommet du graphe `i` différent de l'indice :
+  On prend la valeur minimale entre la distance actuelle de `i` et (distance+poids) entre indice et `i`, si la valeur minimale n'est pas la distance actuelle, alors le prédécesseur de `i` devient le nœud indice.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -390,7 +390,7 @@ Retour [Sommaire III](#sommaire-iii)
 }
 ```
 ### *NOEUD* table_routage_1
-`table_routage_1` permet de remplir les noms des destinataires dans la première colonne de la table de routage. Pour mieux comprendre de quoi il s'agit, cf. [`tableRoutage`](#noeud-tableroutage)
+`table_routage_1` permet de remplir les noms des destinataires dans la première colonne de la table de routage. Pour mieux comprendre de quoi il s'agit, cf. [`tableRoutage`](#noeud-tableroutage).
 
 Retour [Sommaire III](#sommaire-iii)
 
@@ -405,14 +405,14 @@ return graphe;
 }
 ```
 ### *NOEUD* tableRoutage2
-Cette fonction permet de remplir la deuxième colonne de la table de routage i.e. la liste des voisins directs des destinataires avec le plus court chemin pour un noeud donné.
-Pour un `Noeud n` donné, on fait sa table de routage, plusieurs cas sont possibles en parcourant le tableau de noeuds :
+Cette fonction permet de remplir la deuxième colonne de la table de routage i.e. la liste des voisins directs des destinataires avec le plus court chemin pour un nœud donné.
+Pour un `Noeud n` donné, on fait sa table de routage, plusieurs cas sont possibles en parcourant le tableau de nœuds :
 
-- L'indice `i` = nom de n : alors le chemin le plus court est n puisque ce sont les mêmes
-- L'indice `i` != nom de n :
-  - le `prédécesseur de i` =  nom de `n` : alors il existe une arête entre `i` et `n` et c'est le chemin le plus court
+- L'indice `i` = nom de `n` : alors le chemin le plus court est `n` puisque `i` et `n` sont les mêmes.
+- L'indice `i` != nom de `n` :
+  - le prédécesseur de `i` =  nom de `n` : alors il existe une arête entre `i` et `n` et c'est le chemin le plus court.
   - le prédécesseur de `i` != nom de `n` : alors il n'existe pas d'arête entre `i` et `n` : 
-     on regarde alors les prédécesseurs de `i` jusqu'à trouver prédécesseur de `i`-k = nom de `n`, ce qui signifie qu'il existe une arête entre i-k et `n`, le chemin le plus court de `n` à `i` sera : `n`+les k prédécesseurs+`i`.
+     on regarde alors les prédécesseurs de `i` jusqu'à trouver prédécesseur de `i`-k = nom de `n`, ce qui signifie qu'il existe une arête entre `i`-k et `n`, le chemin le plus court de `n` à `i` sera : `n`+les k prédécesseurs+`i`.
 
 Retour [Sommaire III](#sommaire-iii)
 
@@ -440,8 +440,8 @@ struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[10
 ### *NOEUD* tableRoutage
 Cette fonction permet de construire la table de routage pour tous les noeuds.
 Une table de routage est composée de 2 colonnes : 
-La première correspond à tous les destinataires du noeud qu'on considère (i.e. tous les noeuds du graphe),
-La seconde correspond à tous les voisins directs permettant le plus court chemin d'un sommet au noeud qu'on considère dans la table de routage.
+La première correspond à tous les destinataires du nœud qu'on considère (i.e. tous les nœuds du graphe),
+La seconde correspond à tous les voisins directs permettant le plus court chemin d'un sommet au nœud qu'on considère dans la table de routage.
 
 Retour [Sommaire III](#sommaire-iii)
 ```c
@@ -464,24 +464,25 @@ NOEUD tableRoutage(NOEUD graphe, int nbsommets)
 Retour [Sommaire principal](#sommaire-principal)
 
 ### *void* libererGraphe
-Cette fonction libère la mémoire occupée par les structures de données du graphe lorsqu'il n'est plus utile au programme.
+Cette fonction libère la mémoire occupée par les structures de donnée du graphe lorsqu'il n'est plus utile au programme.
 
 Retour [Sommaire IV](#sommaire-iv)
 Retour [Sommaire principal](#sommaire-principal)
 
 ### *void* affiche_noeuds
-Cette fonction affiche les noeuds du graphe.
+Cette fonction affiche les nœuds du graphe.
 
 ### *void* affiche_chemin
-Cette fonction affiche le plus court chemin d'un noeud émetteur à un noeud destinataire.
+Cette fonction affiche le plus court chemin d'un nœud émetteur à un nœud destinataire.
 
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire--principal)
+Retour [Sommaire principal](#sommaire-principal)
 
 ### *int* saisie_noeud
-Cette fonction nous permet de récupérer les noeuds émetteur et destinataire entrés par l'utilisateur tout en vérifiant sa saisie. 
+Cette fonction nous permet de récupérer les nœuds émetteur et destinataire entrés par l'utilisateur tout en vérifiant sa saisie. 
 Selon un mode entré en argument : 
-- S'il s'agit du mode 0, `saisie_noeud` retourne le noeud émetteur.
+
+- S'il s'agit du mode 0, `saisie_noeud` retourne le nœud émetteur.
 ```c
 int saisie_noeud(int mode)
 {
@@ -498,7 +499,7 @@ int saisie_noeud(int mode)
     return noeud_emet;
   }                         //...//
 ```
-  - S'il s'agit mode 1 alors `saisie_noeud` retourne le noeud destinataire.
+  - S'il s'agit mode 1 alors `saisie_noeud` retourne le nœud destinataire.
 ```c
   if(mode==1)
   {
@@ -516,14 +517,15 @@ int saisie_noeud(int mode)
 }
 ```
 Retour [Sommaire IV](#sommaire-iv)
-Retour [Sommaire principal](#sommaire--principal)
+Retour [Sommaire principal](#sommaire-principal)
 
 ### *void* retrouve_chemin
-Cette fonction permet de retrouver le plus court chemin entre deux noeuds entrés par l'utilisateur. 
-Pour cela, on demande à l'utilisateur d'entrer un noeud émetteur et un noeud destinataire à l'aide de la fonction [`saisie_noeud`](#int-saisie_noeud).
+Cette fonction permet de retrouver le plus court chemin entre deux nœuds entrés par l'utilisateur. 
+Pour cela, on demande à l'utilisateur d'entrer un nœud émetteur et un nœud destinataire à l'aide de la fonction [`saisie_noeud`](#int-saisie_noeud).
 
 Retour [Sommaire IV](#sommaire-iv)
 Retour [Sommaire principal](#sommaire-principal)
+
 ```c
 void retrouve_chemin(NOEUD graphe, int nbsommets)
 { 
@@ -534,7 +536,7 @@ void retrouve_chemin(NOEUD graphe, int nbsommets)
   int noeud_dest = saisie_noeud(1);
                             //...//
 ```
-Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche un message signalant que les sommets entrés sont les mêmes.
+Si le nœud émetteur et le nœud destinataire sont identiques, alors on affiche un message signalant que les sommets entrés sont les mêmes.
  ```c
   if(noeud_dest==noeud_emet) 
     {
@@ -543,8 +545,9 @@ Si le noeud émetteur et le noeud destinataire sont identiques, alors on affiche
                             //...//
     }
  ```
-Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage) tableau `transit` et on sauvegarde la valeur du noeud émetteur dans la variable `noeud_emet`.
-Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin)tées précédemment.
+Ensuite, pour retrouver le plus court chemin, on fait appel à la fonction [`tableRoutage`](#noeud-tableroutage).
+Le chemin est alors stocké dans le tableau `transit` et on sauvegarde la valeur du nœud émetteur dans la variable `emet`.
+Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-affiche_chemin) qui prend en argument les deux variables citées précédemment.
 
   ```c
   printf("Pour arriver au noeud %d l'information passe par les noeuds :\n", noeud_dest); 
@@ -565,6 +568,8 @@ Enfin, la fonction affiche ce chemin via la fonction [`affiche_chemin`](#void-af
   ```
 Retour [Sommaire IV](#sommaire-iv)
 Retour [Sommaire principal](#sommaire-principal)
+
+
 
 > BEN AYED Khadija, DEMANGE Noé, VILLA Romain, AMMAD Massina.
 
