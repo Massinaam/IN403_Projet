@@ -427,7 +427,7 @@ struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[10
     }
     else{ 
     int position = i;
-    while(verif_arete(n,graphe[position].nom)==-1){
+    while(n.nom!=pred[position]){
       position=pred[position]%100;
       }
       n.tableRoutage[1][i]=graphe[position].nom;
