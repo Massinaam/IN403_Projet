@@ -348,7 +348,7 @@ struct Noeud tableRoutage2(NOEUD graphe, struct Noeud n, int nbsommets, int d[10
     else
     { int position = i;
    // printf("%d et son pred est %d\n",position, pred[position]);
-     while(verif_arete(n,graphe[position].nom)==-1)
+     while(n.nom!=pred[position])
       {//printf("%d et son pred est %d\n",position, pred[position]);
         position=pred[position]%100;
       }
